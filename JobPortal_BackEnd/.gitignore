@@ -1,0 +1,73 @@
+# ---------------------------------------------
+# .NET build output
+# ---------------------------------------------
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Pp]ublish/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ---------------------------------------------
+# Test results and coverage
+# ---------------------------------------------
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+coverage*/
+
+# ---------------------------------------------
+# Visual Studio / IDE state (per-user, regenerated)
+# ---------------------------------------------
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.ncrunchsolution*
+_ReSharper*/
+*.sln.iml
+
+# ---------------------------------------------
+# Secrets and local configuration
+# ---------------------------------------------
+# .NET user secrets and local overrides must never be committed
+secrets.json
+appsettings.*.local.json
+appsettings.Local.json
+*.pfx
+*.p12
+*.key
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------
+# Logs and temporary files
+# ---------------------------------------------
+*.log
+logs/
+*.tmp
+*.temp
+*~
+*.swp
+*.bak
+
+# ---------------------------------------------
+# OS-generated files
+# ---------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
