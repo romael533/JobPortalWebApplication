@@ -27,7 +27,7 @@ public class JobController : ControllerBase
         try
         {
             var jobId = await _service.AddJob(request, employeeId);
-            return Ok(new { JobId = jobId });
+            return Ok(new { message = "Job created successfully.", JobId = jobId });
         }
         catch (CompanyNotFoundException ex)
         {
@@ -74,7 +74,7 @@ public class JobController : ControllerBase
         try
         {
             await _service.UpdateJob(id, request, employeeId);
-            return Ok(new { JobID = id });
+            return Ok(new { message = "Job updated successfully.", JobID = id });
         }
         catch (InvalidOperationException ex)
         {
@@ -95,7 +95,7 @@ public class JobController : ControllerBase
         try
         {
             await _service.CloseJob(id, employeeId);
-            return Ok(new { JobID = id });
+            return Ok(new { message = "Job closed successfully.", JobID = id });
         }
         catch (InvalidOperationException ex)
         {
@@ -116,7 +116,7 @@ public class JobController : ControllerBase
         try
         {
             await _service.DeleteJob(id, employeeId);
-            return Ok();
+            return Ok(new { message = "Job deleted successfully." });
         }
         catch (InvalidOperationException ex)
         {

@@ -4,7 +4,7 @@ public class Job
 {
     public string Id { get; set; }
     public string CompanyId { get; set; }
-    public string EmployeeId { get; set; }
+    public string EmployerId { get; set; }
     public string JobTitle { get; set; }
     public string JobDescription { get; set; }
     public string JobLocation { get; set; }

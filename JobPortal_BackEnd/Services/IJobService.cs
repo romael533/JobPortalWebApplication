@@ -15,4 +15,5 @@ public interface IJobService
     Task DeleteJob(string id, string employeeId);
     Task<IEnumerable<Job>> GetAllJobs(bool openOnly);
     Task<Job> GetAllJobById(string id, bool openOnly);
+    Task<string> CloseAnyJob(string id);
 }

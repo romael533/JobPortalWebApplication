@@ -23,7 +23,7 @@ public class CompanyService : ICompanyService
             CompanyAddress = request.CompanyAddress,
             CompanyDescription = request.CompanyDescription,
             CompanyWebsite = request.CompanyWebsite,
-            EmployeeId = employeeId
+            EmployerId = employeeId
         };
 
         _db.Companies.Add(company);
@@ -47,11 +47,16 @@ public class CompanyService : ICompanyService
 
     public async Task<Company?> GetCompanyByEmployeeId(string employeeId)
     {
-        return await _db.Companies.FirstOrDefaultAsync(c => c.EmployeeId == employeeId);
+        return await _db.Companies.FirstOrDefaultAsync(c => c.EmployerId == employeeId);
     }
 
     public async Task<IEnumerable<Company>> GetAllCompanies()
     {
         return await _db.Companies.ToListAsync();
+    }
+
+    public async Task<IEnumerable<Company>> GetCompaniesByEmployerIds(IEnumerable<string> employerIds)
+    {
+        return await _db.Companies.Where(c => employerIds.Contains(c.EmployerId)).ToListAsync();
     }
 }

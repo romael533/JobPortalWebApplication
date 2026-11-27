@@ -114,13 +114,13 @@ namespace JobPortal_BackEnd.Migrations
                     b.Property<string>("CompanyWebsite")
                         .HasColumnType("text");
 
-                    b.Property<string>("EmployeeId")
+                    b.Property<string>("EmployerId")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId")
+                    b.HasIndex("EmployerId")
                         .IsUnique();
 
                     b.ToTable("Companies");
@@ -135,7 +135,7 @@ namespace JobPortal_BackEnd.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("EmployeeId")
+                    b.Property<string>("EmployerId")
                         .IsRequired()
                         .HasColumnType("text");
 

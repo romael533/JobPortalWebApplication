@@ -50,4 +50,22 @@ public class AllJobController : ControllerBase
             return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
         }
     }
+
+    [HttpPut("{id}/close")]
+    public async Task<IActionResult> CloseAnyJob(string id)
+    {
+        try
+        {
+            var jobId = await _service.CloseAnyJob(id);
+            return Ok(new { message = "Job closed successfully.", jobId = jobId });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
+        }
+    }
 }

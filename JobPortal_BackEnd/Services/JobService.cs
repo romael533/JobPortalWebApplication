@@ -15,7 +15,7 @@ public class JobService : IJobService
 
 	public async Task<string> AddJob(JobRequest request, string employeeId)
     {
-        var company = await _db.Companies.FirstOrDefaultAsync(c => c.EmployeeId == employeeId);
+        var company = await _db.Companies.FirstOrDefaultAsync(c => c.EmployerId == employeeId);
         if (company == null)
         {
             throw new CompanyNotFoundException("No company found for the given employee ID.");
@@ -30,7 +30,7 @@ public class JobService : IJobService
             JobType = request.JobType,
             JobSkills = request.JobSkills,
             ExperienceSummary = request.ExperienceSummary,
-            EmployeeId = employeeId,
+            EmployerId = employeeId,
             JobStatus = "Open",
             CompanyId = companyId
         };
@@ -55,17 +55,17 @@ public class JobService : IJobService
 
     public async Task<IEnumerable<Job>> GetJobsByEmployeeId(string employeeId)
     {
-        return await _db.Jobs.Where(j => j.EmployeeId == employeeId).ToListAsync();
+        return await _db.Jobs.Where(j => j.EmployerId == employeeId).ToListAsync();
     }
 
     public async Task<Job> GetJobById(string id, string employeeId)
     {
-        return await _db.Jobs.FirstOrDefaultAsync(j => j.Id == id && j.EmployeeId == employeeId);
+        return await _db.Jobs.FirstOrDefaultAsync(j => j.Id == id && j.EmployerId == employeeId);
     }
 
     public async Task<string> UpdateJob(string id, JobRequest request, string employeeId)
     {
-        var job = await _db.Jobs.FirstOrDefaultAsync(j => j.Id == id && j.EmployeeId == employeeId);
+        var job = await _db.Jobs.FirstOrDefaultAsync(j => j.Id == id && j.EmployerId == employeeId);
         if (job == null)
         {
             throw new InvalidOperationException("Job not found.");
@@ -97,7 +97,7 @@ public class JobService : IJobService
 
     public async Task<string> CloseJob(string id, string employeeId)
     {
-        var job = await _db.Jobs.FirstOrDefaultAsync(j => j.Id == id && j.EmployeeId == employeeId);
+        var job = await _db.Jobs.FirstOrDefaultAsync(j => j.Id == id && j.EmployerId == employeeId);
         if (job == null)
         {
             throw new InvalidOperationException("Job not found.");
@@ -110,7 +110,7 @@ public class JobService : IJobService
 
     public async Task DeleteJob(string id, string employeeId)
     {
-        var job = await _db.Jobs.FirstOrDefaultAsync(j => j.Id == id && j.EmployeeId == employeeId);
+        var job = await _db.Jobs.FirstOrDefaultAsync(j => j.Id == id && j.EmployerId == employeeId);
         if (job == null)
         {
             throw new InvalidOperationException("Job not found.");
@@ -142,6 +142,19 @@ public class JobService : IJobService
             throw new KeyNotFoundException("Job not found.");
         }
         return job;
+    }
+
+    public async Task<string> CloseAnyJob(string id)
+    {
+        var job = await _db.Jobs.FirstOrDefaultAsync(j => j.Id == id);
+        if (job == null)
+        {
+            throw new InvalidOperationException("Job not found.");
+        }
+        job.JobStatus = "Closed";
+        _db.Jobs.Update(job);
+        await _db.SaveChangesAsync();
+        return job.Id;
     }
 
 }

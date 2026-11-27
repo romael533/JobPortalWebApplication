@@ -29,6 +29,6 @@ public class AuthController : ControllerBase
             return StatusCode(StatusCodes.Status403Forbidden, "User account is not active.");
 
         var roles = await _userManager.GetRolesAsync(user);
-        return Ok(new { Token = _tokens.CreateToken(user, roles) });
+        return Ok(new { message = "Login successful.", Token = _tokens.CreateToken(user, roles) });
     }
 }

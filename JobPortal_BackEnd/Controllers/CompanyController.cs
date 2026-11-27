@@ -25,7 +25,7 @@ public class CompanyController : ControllerBase
 			return Unauthorized();
 		try {
             var companyId = await _service.AddCompany(request, employeeId);
-            return Ok(new { CompanyId = companyId });
+            return Ok(new { message = "Company created successfully.", CompanyId = companyId });
         }
         catch (CompanyNotFoundException ex)
         {

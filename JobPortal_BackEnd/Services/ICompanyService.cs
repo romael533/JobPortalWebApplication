@@ -12,4 +12,5 @@ public interface ICompanyService
     Task<string> AddCompany(CompanyRequest request, string employeeId);
     Task<Company?> GetCompanyByEmployeeId(string employeeId);
     Task<IEnumerable<Company>> GetAllCompanies();
+    Task<IEnumerable<Company>> GetCompaniesByEmployerIds(IEnumerable<string> employerIds);
 }

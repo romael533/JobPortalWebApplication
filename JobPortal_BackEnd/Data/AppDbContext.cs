@@ -21,7 +21,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(builder);
 
         builder.Entity<Company>()
-            .HasIndex(c => c.EmployeeId)
+            .HasIndex(c => c.EmployerId)
             .IsUnique();
 
         builder.Entity<Job>()

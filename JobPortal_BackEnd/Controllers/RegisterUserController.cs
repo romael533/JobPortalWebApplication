@@ -19,7 +19,7 @@ public class RegisterUserController : ControllerBase
 	public async Task<IActionResult> Post([FromBody] RegisterRequest request)
     {
         var userid = await _service.RegisterUserAsync(request);
-        return Ok(new { UserId = userid });
+        return Ok(new { message = "User registered successfully.", UserId = userid });
     }
 }
 

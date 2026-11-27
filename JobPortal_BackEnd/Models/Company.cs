@@ -9,5 +9,5 @@ public class Company
     public string? CompanyAddress { get; set; }
     public string? CompanyDescription { get; set; }
     public string? CompanyWebsite { get; set; }
-    public string EmployeeId { get; set; }
+    public string EmployerId { get; set; }
 }

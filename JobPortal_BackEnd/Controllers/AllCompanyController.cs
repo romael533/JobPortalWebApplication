@@ -7,17 +7,19 @@ using Microsoft.AspNetCore.Authorization;
 namespace JobPortal_BackEnd.Controllers;
 
 [ApiController]
-[Route("api/v1/companies")]
+[Route("api/v1/all")]
 [Authorize(Roles = "Admin")]
 public class AllCompanyController : ControllerBase
 {
 	private readonly ICompanyService _service;
-    public AllCompanyController(ICompanyService service)
+    private readonly IEmployerService _employerservice;
+    public AllCompanyController(ICompanyService service, IEmployerService employerservice)
 	{
         _service = service;
+        _employerservice = employerservice;
     }
 
-    [HttpGet]
+    [HttpGet("companies")]
     public async Task<IActionResult> GetAllCompanies()
     {
         try
@@ -31,4 +33,24 @@ public class AllCompanyController : ControllerBase
         }
     }
 
+    [HttpGet("employers")]
+    public async Task<IActionResult> GetAllEmployees()
+    {
+        var employers = await _employerservice.GetEmployerWithCompanies();
+        return Ok(employers);
+    }
+
+    [HttpPost("employers/status/update/{id}")]
+    public async Task<IActionResult> SetEmployerStatus(string id, bool isActive) {
+        try {
+            var result = await _employerservice.SetEmployerStatus(id, isActive);
+            if (!result.Succeeded)
+                return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
+            return Ok(new { message = "Employee status updated", EmployerId = id });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }        
+    }
 }
