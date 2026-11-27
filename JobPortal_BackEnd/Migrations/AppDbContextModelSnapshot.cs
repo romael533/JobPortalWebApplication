@@ -120,6 +120,9 @@ namespace JobPortal_BackEnd.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
+
                     b.ToTable("Companies");
                 });
 

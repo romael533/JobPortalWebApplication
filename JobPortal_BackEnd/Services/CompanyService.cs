@@ -27,8 +27,21 @@ public class CompanyService : ICompanyService
         };
 
         _db.Companies.Add(company);
-        await _db.SaveChangesAsync();
-
+        try
+        {
+            await _db.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            if (ex.InnerException != null && ex.InnerException.Message.Contains("duplicate key value"))
+            {
+                throw new InvalidOperationException("A company with this employee ID already exists.");
+            }
+            else
+            {
+                throw;
+            }
+        }
         return company.Id;
     }
 }

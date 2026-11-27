@@ -23,8 +23,19 @@ public class CompanyController : ControllerBase
 		var employeeId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (string.IsNullOrEmpty(employeeId))
 			return Unauthorized();
-		var companyId = await _service.AddCompany(request, employeeId);
-		return Ok(new { CompanyId = companyId });	
-	}
+		try {
+            var companyId = await _service.AddCompany(request, employeeId);
+            return Ok(new { CompanyId = companyId });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
+        }
+
+    }
 
 }

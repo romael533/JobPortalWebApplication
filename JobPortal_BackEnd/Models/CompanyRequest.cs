@@ -9,8 +9,8 @@ public class CompanyRequest
     [Required]
     public string CompanyEmail { get; set; }
 
-    public string CompanyPhone { get; set; }
-    public string CompanyAddress { get; set; }
-    public string CompanyDescription { get; set; }
-    public string CompanyWebsite { get; set; }
+    public string? CompanyPhone { get; set; }
+    public string? CompanyAddress { get; set; }
+    public string? CompanyDescription { get; set; }
+    public string? CompanyWebsite { get; set; }
 }
