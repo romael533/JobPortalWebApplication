@@ -126,6 +126,55 @@ namespace JobPortal_BackEnd.Migrations
                     b.ToTable("Companies");
                 });
 
+            modelBuilder.Entity("JobPortal_BackEnd.Models.Job", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CompanyId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExperienceSummary")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobDescription")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobLocation")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobSkills")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobTitle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobTitle", "CompanyId")
+                        .IsUnique();
+
+                    b.ToTable("Jobs");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")

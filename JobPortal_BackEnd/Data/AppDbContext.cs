@@ -14,12 +14,18 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Company> Companies { get; set; } = null!;
 
+    public DbSet<Job> Jobs { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
         builder.Entity<Company>()
             .HasIndex(c => c.EmployeeId)
+            .IsUnique();
+
+        builder.Entity<Job>()
+            .HasIndex(c => new { c.JobTitle, c.CompanyId })
             .IsUnique();
     }
 }

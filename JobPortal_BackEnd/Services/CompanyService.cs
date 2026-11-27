@@ -44,4 +44,9 @@ public class CompanyService : ICompanyService
         }
         return company.Id;
     }
+
+    public async Task<Company?> GetCompanyByEmployeeId(string employeeId)
+    {
+        return await _db.Companies.FirstOrDefaultAsync(c => c.EmployeeId == employeeId);
+    }
 }

@@ -7,7 +7,7 @@ using System.Security.Claims;
 namespace JobPortal_BackEnd.Controllers;
 
 [ApiController]
-[Route("api/companies/mine")]
+[Route("api/v1/companies/mine")]
 [Authorize(Roles="Employer")]
 public class CompanyController : ControllerBase
 {
@@ -27,6 +27,10 @@ public class CompanyController : ControllerBase
             var companyId = await _service.AddCompany(request, employeeId);
             return Ok(new { CompanyId = companyId });
         }
+        catch (CompanyNotFoundException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
         catch (InvalidOperationException ex)
         {
             return Conflict(new { message = ex.Message });
@@ -38,4 +42,15 @@ public class CompanyController : ControllerBase
 
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        var employeeId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(employeeId))
+            return Unauthorized();
+        var company = await _service.GetCompanyByEmployeeId(employeeId);
+        if (company == null)
+            return NotFound();
+        return Ok(company);
+    }
 }
