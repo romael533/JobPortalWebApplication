@@ -89,6 +89,49 @@ namespace JobPortal_BackEnd.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("JobPortal_BackEnd.Models.Candidate", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CandidateId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExperienceSummary")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LanguagesKnown")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Skills")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId")
+                        .IsUnique();
+
+                    b.ToTable("Candidates");
+                });
+
             modelBuilder.Entity("JobPortal_BackEnd.Models.Company", b =>
                 {
                     b.Property<string>("Id")
@@ -173,6 +216,34 @@ namespace JobPortal_BackEnd.Migrations
                         .IsUnique();
 
                     b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("JobPortal_BackEnd.Models.JobApplication", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("AppliedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CandidateId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId", "JobId")
+                        .IsUnique();
+
+                    b.ToTable("JobApplications");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

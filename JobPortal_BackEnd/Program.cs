@@ -78,7 +78,7 @@ builder.Services.AddScoped<IRegisterUserService, RegisterUserService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IEmployerService, EmployerService>();
-
+builder.Services.AddScoped<ICandidateService, CandidateService>();
 
 var app = builder.Build();
 

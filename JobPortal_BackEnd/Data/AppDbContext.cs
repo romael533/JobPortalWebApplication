@@ -16,6 +16,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Job> Jobs { get; set; } = null!;
 
+    public DbSet<Candidate> Candidates { get; set; } = null!;
+
+    public DbSet<JobApplication> JobApplications { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -25,7 +29,15 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .IsUnique();
 
         builder.Entity<Job>()
-            .HasIndex(c => new { c.JobTitle, c.CompanyId })
+            .HasIndex(j => new { j.JobTitle, j.CompanyId })
+            .IsUnique();
+
+        builder.Entity<Candidate>()
+            .HasIndex(c => c.CandidateId)
+            .IsUnique();
+
+        builder.Entity<JobApplication>()
+            .HasIndex(j => new { j.CandidateId, j.JobId })
             .IsUnique();
     }
 }
