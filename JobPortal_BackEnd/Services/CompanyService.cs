@@ -49,4 +49,9 @@ public class CompanyService : ICompanyService
     {
         return await _db.Companies.FirstOrDefaultAsync(c => c.EmployeeId == employeeId);
     }
+
+    public async Task<IEnumerable<Company>> GetAllCompanies()
+    {
+        return await _db.Companies.ToListAsync();
+    }
 }

@@ -119,4 +119,29 @@ public class JobService : IJobService
         await _db.SaveChangesAsync();
     }
 
+    public async Task<IEnumerable<Job>> GetAllJobs(bool openOnly)
+    {
+        var query = _db.Jobs.AsQueryable();
+        if (openOnly)
+        {
+            query = query.Where(j => j.JobStatus == "Open");
+        }
+        return await query.ToListAsync();
+    }
+
+    public async Task<Job> GetAllJobById(string id, bool openOnly)
+    {
+        var query = _db.Jobs.Where(j => j.Id == id);
+        if (openOnly)
+        {
+            query = query.Where(j => j.JobStatus == "Open");
+        }
+        var job = await query.FirstOrDefaultAsync();
+        if (job == null)
+        {
+            throw new KeyNotFoundException("Job not found.");
+        }
+        return job;
+    }
+
 }
