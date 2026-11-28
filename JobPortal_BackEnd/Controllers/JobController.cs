@@ -9,16 +9,16 @@ namespace JobPortal_BackEnd.Controllers;
 
 [ApiController]
 [Route("api/v1/jobs/mine")]
-[Authorize(Roles="Employer")]
+[Authorize(Roles = "Employer")]
 public class JobController : ControllerBase
 {
-	private readonly IJobService _service;
+    private readonly IJobService _service;
     public JobController(IJobService service)
-	{
-		_service = service;
+    {
+        _service = service;
     }
 
-	[HttpPost]
+    [HttpPost]
     public async Task<IActionResult> Post([FromBody] JobRequest request)
     {
         var employeeId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -126,5 +126,26 @@ public class JobController : ControllerBase
         {
             return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
         }
-    }    
+    }
+
+    [HttpGet("{id}/applications")]
+    public async Task<IActionResult> CandidatesAppliedForJob(string id) {
+    var employerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    if (string.IsNullOrEmpty(employerId))
+        return Unauthorized();
+    try
+    {
+        var result = await _service.CandidatesAppliedForJob(id, employerId);
+        return Ok(result);
+    }
+     catch (JobNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
+    }
+}
+
 }

@@ -197,4 +197,30 @@ public class JobService : IJobService
             TotalPages = (int)Math.Ceiling(total / (double)pageSize)
         };
     }
+
+    public async Task<IEnumerable<CandidateDetails>> CandidatesAppliedForJob(string jobId, string employerId) {
+        var jobExists = await _db.Jobs.AnyAsync(j => j.Id == jobId && j.EmployerId == employerId);
+        if (!jobExists)
+            throw new JobNotFoundException("Job not found.");
+        return await (
+                from j in _db.Jobs
+                join ja in _db.JobApplications on j.Id equals ja.JobId
+                join cd in _db.Candidates on ja.CandidateId equals cd.CandidateId
+                where j.EmployerId == employerId && j.Id == jobId
+                select new CandidateDetails
+                {
+                    Name = cd.Name,
+                    Email = cd.Email,
+                    Phone = cd.Phone,
+                    Address = cd.Address,
+                    Skills = cd.Skills,
+                    ExperienceSummary = cd.ExperienceSummary,
+                    LanguagesKnown = cd.LanguagesKnown,
+                    CandidateId = cd.CandidateId,
+                    ApplicationId = ja.Id,
+                    AppliedDate = ja.AppliedOn,
+                    ApplicationStatus = ja.Status
+                }
+                ).ToListAsync();                  
+    }
 }
