@@ -127,4 +127,20 @@ public class CandidateController : ControllerBase
             return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
         }
     }
+
+    [HttpGet("applications")]
+    public async Task<IActionResult> GetMyApplications() {
+        var candidateId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(candidateId))
+            return Unauthorized();
+        try
+        {
+            var applications = await _service.GetMyApplications(candidateId);
+            return Ok(applications);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
+        }
+    }
 }

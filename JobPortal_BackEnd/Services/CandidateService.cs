@@ -124,4 +124,23 @@ public class CandidateService : ICandidateService
         _db.JobApplications.Update(jobApplication);
         await _db.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<AppliedJobs>> GetMyApplications(string candidateId) {
+        return await (
+        from ja in _db.JobApplications
+        join j in _db.Jobs on ja.JobId equals j.Id
+        join c in _db.Companies on j.CompanyId equals c.Id
+        where ja.CandidateId == candidateId
+        select new AppliedJobs
+        {
+            CompanyName = c.CompanyName,
+            JobTitle = j.JobTitle,
+            Status = ja.Status,
+            AppliedOn = ja.AppliedOn,
+            JobId = ja.JobId,
+            CompanyId = j.CompanyId,
+            ApplicationId = ja.Id
+        }
+    ).ToListAsync();
+    }
 }
