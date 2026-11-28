@@ -16,4 +16,5 @@ public interface IJobService
     Task<IEnumerable<Job>> GetAllJobs(bool openOnly);
     Task<Job> GetAllJobById(string id, bool openOnly);
     Task<string> CloseAnyJob(string id);
+    Task<PagedResult<JobSummary>> SearchJob(string searchTerm, int page, int pageSize);
 }

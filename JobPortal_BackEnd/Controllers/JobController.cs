@@ -126,5 +126,5 @@ public class JobController : ControllerBase
         {
             return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
         }
-    }
+    }    
 }

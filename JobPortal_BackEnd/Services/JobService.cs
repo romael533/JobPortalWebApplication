@@ -156,4 +156,45 @@ public class JobService : IJobService
         return job.Id;
     }
 
+    public async Task<PagedResult<JobSummary>> SearchJob(string searchTerm, int page, int pageSize)
+    {
+        var pattern = $"%{searchTerm}%";
+
+        var query =
+        from j in _db.Jobs
+        join c in _db.Companies on j.CompanyId equals c.Id
+        where j.JobStatus == JobStatus.Open
+       && (EF.Functions.ILike(j.JobTitle, pattern)
+        || EF.Functions.ILike(j.JobLocation, pattern)
+        || EF.Functions.ILike(j.JobDescription, pattern)
+        || EF.Functions.ILike(j.JobSkills, pattern)
+        || EF.Functions.ILike(j.ExperienceSummary, pattern))
+        select new JobSummary { 
+        CompanyName = c.CompanyName,
+        JobTitle = j.JobTitle,
+        JobLocation = j.JobLocation,
+        JobType = j.JobType,
+        JobDescription = j.JobDescription,
+        JobSkills = j.JobSkills,
+        ExperienceSummary = j.ExperienceSummary,
+        JobId = j.Id
+        };
+
+        var total = await query.CountAsync();
+
+        var items = await query
+        .OrderBy(r => r.JobTitle)
+        .ThenBy(r => r.JobId)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+
+        return new PagedResult<JobSummary> {
+            Items = items,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = total,
+            TotalPages = (int)Math.Ceiling(total / (double)pageSize)
+        };
+    }
 }

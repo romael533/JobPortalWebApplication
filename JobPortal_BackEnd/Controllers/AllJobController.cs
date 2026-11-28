@@ -68,4 +68,24 @@ public class AllJobController : ControllerBase
             return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
         }
     }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchJob(string searchTerm, int page=1, int pageSize=10)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))            
+                return BadRequest(new { message = "Search term cannot be empty." });            
+            if (page < 1)
+                return BadRequest(new { message = "Page must be 1 or greater." });
+            if (pageSize < 1 || pageSize > 50)
+                return BadRequest(new { message = "Page size must be between 1 and 50." });
+            var result = await _service.SearchJob(searchTerm.Trim(), page, pageSize);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
+        }
+    }
 }
