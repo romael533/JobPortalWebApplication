@@ -12,15 +12,15 @@ namespace JobPortal_BackEnd.Controllers;
 [Authorize(Roles = "Candidate")]
 public class CandidateController : ControllerBase
 {
-	private readonly ICandidateService _service;
-	public CandidateController(ICandidateService service)
-	{
-		_service = service;
-	}
+    private readonly ICandidateService _service;
+    public CandidateController(ICandidateService service)
+    {
+        _service = service;
+    }
 
-	[HttpPost]
-	public async Task<IActionResult> Post([FromBody] CandidateRequest request) {
-		var candidateId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] CandidateRequest request) {
+        var candidateId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(candidateId))
             return Unauthorized();
         try
@@ -35,11 +35,11 @@ public class CandidateController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
-        }      
+        }
     }
 
-	[HttpPut]
-	public async Task<IActionResult> Put([FromBody] CandidateRequest request)
+    [HttpPut]
+    public async Task<IActionResult> Put([FromBody] CandidateRequest request)
     {
         var candidateId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         try
@@ -52,13 +52,13 @@ public class CandidateController : ControllerBase
             return Conflict(new { message = ex.Message });
         }
         catch (KeyNotFoundException ex)
-        { 
+        {
             return NotFound(new { message = ex.Message });
         }
         catch (Exception ex)
         {
             return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
-        }        
+        }
     }
 
     [HttpGet]
@@ -92,6 +92,31 @@ public class CandidateController : ControllerBase
         catch (JobNotFoundException ex)
         {
             return NotFound(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message });
+        }
+    }
+
+    [HttpPost("jobs/{jobId}/withdraw")]
+    public async Task<IActionResult> WithdrawJobApplication(string jobId)
+    {
+        var candidateId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(candidateId))
+            return Unauthorized();
+        try
+        {
+            await _service.WithdrawJobApplication(candidateId, jobId);
+            return Ok(new { message = "Candidate has withdrawn Job application successfully" });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
         }
         catch (KeyNotFoundException ex)
         {

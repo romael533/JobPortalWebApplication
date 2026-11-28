@@ -13,4 +13,5 @@ public interface ICandidateService
 	public Task<string> UpdateProfile(CandidateRequest reuqest, string candidateId);
 	public Task<Candidate?> GetProfile(string candidateId);
 	public Task<string> ApplyJob(string candidateId, string jobId);
+	public Task WithdrawJobApplication(string candidateId, string jobId);
 }

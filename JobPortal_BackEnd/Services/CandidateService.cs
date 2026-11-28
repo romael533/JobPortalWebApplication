@@ -79,7 +79,16 @@ public class CandidateService : ICandidateService
         }
         if (!await _db.Candidates.AnyAsync(c => c.CandidateId == candidateId))
             throw new KeyNotFoundException("Create a candidate profile before applying.");
-
+        var existingApplication = await _db.JobApplications.FirstOrDefaultAsync(ja => ja.CandidateId == candidateId && ja.JobId == jobId);
+        if (existingApplication != null)
+        {
+            if(existingApplication.Status != JobApplicationStatus.Withdrawn)
+                throw new InvalidOperationException("Job already applied by same candidate.");
+            existingApplication.Status = JobApplicationStatus.Applied;
+            existingApplication.AppliedOn = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+            return existingApplication.Id;
+        }
         var jobApplication = new JobApplication {
             Id = Guid.NewGuid().ToString(),
             CandidateId = candidateId,
@@ -102,5 +111,17 @@ public class CandidateService : ICandidateService
              }
         }
         return jobApplication.Id;
+    }
+
+    public async Task WithdrawJobApplication(string candidateId, string jobId)
+    {
+        var jobApplication = await _db.JobApplications.FirstOrDefaultAsync(ja => ja.CandidateId == candidateId && ja.JobId == jobId);
+        if (jobApplication == null)
+            throw new KeyNotFoundException("Job application not found.");
+        if (jobApplication.Status != JobApplicationStatus.Applied)
+            throw new InvalidOperationException("Cannot withdraw a job application that is not in 'Applied' status.");
+        jobApplication.Status = JobApplicationStatus.Withdrawn;
+        _db.JobApplications.Update(jobApplication);
+        await _db.SaveChangesAsync();
     }
 }
