@@ -73,7 +73,7 @@ public class CandidateService : ICandidateService
         {
             throw new JobNotFoundException("Job not found.");
         }
-        if (job.JobStatus == "Closed")
+        if (job.JobStatus == JobStatus.Closed)
         {
             throw new InvalidOperationException("Job already closed.");
         }
@@ -84,7 +84,7 @@ public class CandidateService : ICandidateService
             Id = Guid.NewGuid().ToString(),
             CandidateId = candidateId,
             JobId = jobId,
-            Status = "Applied",
+            Status = JobApplicationStatus.Applied,
             AppliedOn = DateTime.UtcNow
             };
         _db.JobApplications.Add(jobApplication);

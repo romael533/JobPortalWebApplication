@@ -39,6 +39,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<JobApplication>()
             .HasIndex(j => new { j.CandidateId, j.JobId })
             .IsUnique();
+
+        builder.Entity<Job>().Property(j => j.JobType).HasConversion<string>();
+        builder.Entity<Job>().Property(j => j.JobStatus).HasConversion<string>();
+        builder.Entity<JobApplication>().Property(j => j.Status).HasConversion<string>();
     }
 }
 

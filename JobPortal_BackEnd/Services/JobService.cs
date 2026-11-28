@@ -27,11 +27,11 @@ public class JobService : IJobService
             JobTitle = request.JobTitle,
             JobDescription = request.JobDescription,
             JobLocation = request.JobLocation,
-            JobType = request.JobType,
+            JobType = request.JobType!.Value,
             JobSkills = request.JobSkills,
             ExperienceSummary = request.ExperienceSummary,
             EmployerId = employeeId,
-            JobStatus = "Open",
+            JobStatus = JobStatus.Open,
             CompanyId = companyId
         };
         _db.Jobs.Add(job);
@@ -73,10 +73,9 @@ public class JobService : IJobService
         job.JobTitle = request.JobTitle;
         job.JobDescription = request.JobDescription;
         job.JobLocation = request.JobLocation;
-        job.JobType = request.JobType;
+        job.JobType = request.JobType!.Value;
         job.JobSkills = request.JobSkills;
         job.ExperienceSummary = request.ExperienceSummary;
-        job.JobStatus = request.JobStatus;
         try {
             _db.Jobs.Update(job);
             await _db.SaveChangesAsync();
@@ -102,7 +101,7 @@ public class JobService : IJobService
         {
             throw new InvalidOperationException("Job not found.");
         }
-        job.JobStatus = "Closed";
+        job.JobStatus = JobStatus.Closed;
         _db.Jobs.Update(job);
         await _db.SaveChangesAsync();        
         return job.Id;
@@ -124,7 +123,7 @@ public class JobService : IJobService
         var query = _db.Jobs.AsQueryable();
         if (openOnly)
         {
-            query = query.Where(j => j.JobStatus == "Open");
+            query = query.Where(j => j.JobStatus == JobStatus.Open);
         }
         return await query.ToListAsync();
     }
@@ -134,7 +133,7 @@ public class JobService : IJobService
         var query = _db.Jobs.Where(j => j.Id == id);
         if (openOnly)
         {
-            query = query.Where(j => j.JobStatus == "Open");
+            query = query.Where(j => j.JobStatus == JobStatus.Open);
         }
         var job = await query.FirstOrDefaultAsync();
         if (job == null)
@@ -151,7 +150,7 @@ public class JobService : IJobService
         {
             throw new InvalidOperationException("Job not found.");
         }
-        job.JobStatus = "Closed";
+        job.JobStatus = JobStatus.Closed;
         _db.Jobs.Update(job);
         await _db.SaveChangesAsync();
         return job.Id;
